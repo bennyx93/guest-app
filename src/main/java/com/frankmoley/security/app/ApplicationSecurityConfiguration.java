@@ -48,4 +48,14 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .httpBasic();
     }
 
+//    @Bean
+//    @Override
+//    public UserDetailsService userDetailsService() {
+//        List<UserDetails> users = new ArrayList<>();
+//        // DO NOT USE THIS ON PRODUCTION
+//        users.add(User.withDefaultPasswordEncoder().username("bchan").password("password").roles("ADMIN").build());
+//
+//        return new InMemoryUserDetailsManager(users);
+//    }
+
 }
