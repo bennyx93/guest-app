@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-//Spring security relies on principles, not users, so we need a way to build and translate the two.
 public class LandonUserPrincipal implements UserDetails{
 
     private User user;
