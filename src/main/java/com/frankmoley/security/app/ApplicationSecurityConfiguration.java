@@ -1,6 +1,6 @@
 package com.frankmoley.security.app;
 
-import com.frankmoley.security.app.auth.LandonUserDetailsService;
+//import com.frankmoley.security.app.auth.LandonUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -27,17 +28,17 @@ import java.util.List;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapter{
-    @Autowired
-    private LandonUserDetailsService userDetailsService;
-
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(new BCryptPasswordEncoder(11));
-        provider.setAuthoritiesMapper(authoritiesMapper());
-        return provider;
-    }
+//    @Autowired
+//    private LandonUserDetailsService userDetailsService;
+//
+//    @Bean
+//    public DaoAuthenticationProvider authenticationProvider(){
+//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+//        provider.setUserDetailsService(userDetailsService);
+//        provider.setPasswordEncoder(new BCryptPasswordEncoder(11));
+//        provider.setAuthoritiesMapper(authoritiesMapper());
+//        return provider;
+//    }
 
     @Bean
     public GrantedAuthoritiesMapper authoritiesMapper(){
@@ -49,7 +50,18 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider());
+//        auth.authenticationProvider(authenticationProvider());
+        auth
+                .ldapAuthentication()
+                .userDnPatterns("uid={0},ou=people")
+                .groupSearchBase("ou=groups")
+                .authoritiesMapper(authoritiesMapper())
+                .contextSource()
+                .url("ldap://localhost:8389/dc=frankmoley,dc=com")
+                .and()
+                .passwordCompare()
+                .passwordEncoder(new LdapShaPasswordEncoder())
+                .passwordAttribute("userPassword");
     }
 
     @Override
