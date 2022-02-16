@@ -1,2 +1,0 @@
-INSERT INTO USER (USERNAME, PASSWORD) VALUES ('fpmoles', 'password');
-INSERT INTO USER (USERNAME, PASSWORD) VALUES ('jdoe', 'foobar');
